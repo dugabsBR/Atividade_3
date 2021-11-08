@@ -1,0 +1,123 @@
+<p> 1) Instale o pacote "fda":<p>
+
+ - install.packages("fda")
+ 
+ - library("fda")
+```{r library, include=FALSE}
+#install.packages("fda")
+
+library("tidyverse")
+library("fda")
+library("stats")
+```
+
+<p> 2) Aponte todas as variáveis que compõem a base de dados:<p>
+```{r}
+data.class(CanadianWeather)
+```
+<p> A base de dados CanadianWeather tem o formato de lista. Entretanto, dentro dela tem vetores, arrays e matrizes. As listas são estruturas genéricas e flexíveis, dentro delas é possível armazenar diversos tipos de objetos, como é visto nesta base de dados.<p> 
+
+```{r}
+summary(CanadianWeather)
+```
+<p> Na base de dados conseguimos encontrar variáveis numericas e de caracteres, dividas em diversos tipos de objetos.<p>
+
+
+<p> 3)Você consegue entender a estrutura dos dados? dica: matrizes, vetores, listas<p>
+```{r}
+data.class(CanadianWeather$dailyAv)
+data.class(CanadianWeather$place)
+data.class(CanadianWeather$province)
+data.class(CanadianWeather$coordinates)
+data.class(CanadianWeather$region)
+data.class(CanadianWeather$monthlyTemp)
+data.class(CanadianWeather$monthlyPrecip)
+data.class(CanadianWeather$geogindex)
+```
+<p> Como pode ser visto a base de dados é composta por uma array; quatro vetores, sendo três de caracteres e um de números; e três matrizes.<p> 
+
+<p> Vetores -> Possivelmente, é a estrutra mais simples encontrada no R. No qual ela tem somente uma dimensão, no nosso dia-a-dia seria como se fosse uma lista de presença (uma coluna com um nome por linha).<p>
+
+<p> Matrizes -> As matrizes já são uma estrutura bidimensional, ou seja, ela é formada por linhas e colunas. Podemos considerar como um exemplo o histórico escolar, onde você tem uma coluna com as disciplinas e uma outra com as notas.<p>
+
+<p> Arrays -> Um array é uma generalização da matriz, esse objeto nos permite ter mais de duas dimensões. É como se tivéssemos várias matrizes num mesmo objeto, no caso da base CanadianWeather o array está na variável de temperatura diária (CanadianWeather$dailyAv), onde cada “matriz” é um mês, as linhas são os dias daquele mês e as colunas são as cidades.<p>
+
+
+<p> 4) Faça gráficos das temperaturas e precipitação mensais para as estações de: Montreal, Toronto, London, Winnipeg, Churchill, Regina, Calgary, Vancouver, Victoria.<p>
+```{r include=FALSE}
+#Transformando a matriz da temperatura mensal em um DataFrame, afim de facilitar as manipulações necessarias
+CanadianWeatherMonthlyTemp  <- as.data.frame(CanadianWeather$monthlyTemp)  
+                   
+#Criando um DataFrame da média mensal das temperaturas com as variáveis pedidas no exercício, a variável "Month" será usada como um fator, por isso elá está sendo criada de forma númerica
+CanadianWeatherMonthlyTempSelected <- data.frame(Month = 1:12,
+                                              Montreal = c(CanadianWeatherMonthlyTemp$Montreal), 
+                                              Toronto = c(CanadianWeatherMonthlyTemp$Toronto), 
+                                              London = c(CanadianWeatherMonthlyTemp$London), 
+                                              Winnipeg = c(CanadianWeatherMonthlyTemp$Winnipeg), 
+                                              Churchill = c(CanadianWeatherMonthlyTemp$Churchill), 
+                                              Regina = c(CanadianWeatherMonthlyTemp$Regina), 
+                                              Calgary = c(CanadianWeatherMonthlyTemp$Calgary), 
+                                              Vancouver = c(CanadianWeatherMonthlyTemp$Vancouver), 
+                                              Victoria = c(CanadianWeatherMonthlyTemp$Victoria))
+
+#Criando um gráfico de linha das temperaturas médias mensais
+GraficoTemperatura <- ggplot(CanadianWeatherMonthlyTempSelected, aes(Month, Montreal)) +
+                              geom_line(aes(col = "Montreal"))+
+                              geom_line(aes(y = Toronto, col = "Toronto"))+
+                              geom_line(aes(y = London, col = "London"))+
+                              geom_line(aes(y = Winnipeg, col = "Winnipeg"))+
+                              geom_line(aes(y = Churchill, col = "Churchill"))+
+                              geom_line(aes(y = Regina, col = "Regina"))+
+                              geom_line(aes(y = Calgary, col = "Calgary"))+
+                              geom_line(aes(y = Vancouver, col = "Vancouver"))+
+                              geom_line(aes(y = Victoria, col = "Victoria"))+
+                              labs(title = "Gráfico da Temperatura Média Mensal x Meses",
+                                   x = "Meses",
+                                   y = "Temperatura",
+                                   color = "Estações")+
+                              theme_classic()
+
+#Transformando a matriz da temperatura mensal em um DataFrame, afim de facilitar as manipulações necessarias
+CanadianWeatherMonthlyPrecip  <- as.data.frame(CanadianWeather$monthlyPrecip)  
+                   
+#Criando um DataFrame da média mensal das temperaturas com as variáveis pedidas no exercício, a variável "Month" será usada como um fator, por isso elá está sendo criada de forma númerica
+CanadianWeatherMonthlyPrecipSelected <- data.frame(Month = 1:12,
+                                              Montreal = c(CanadianWeatherMonthlyPrecip$Montreal), 
+                                              Toronto = c(CanadianWeatherMonthlyPrecip$Toronto), 
+                                              London = c(CanadianWeatherMonthlyPrecip$London), 
+                                              Winnipeg = c(CanadianWeatherMonthlyPrecip$Winnipeg), 
+                                              Churchill = c(CanadianWeatherMonthlyPrecip$Churchill), 
+                                              Regina = c(CanadianWeatherMonthlyPrecip$Regina), 
+                                              Calgary = c(CanadianWeatherMonthlyPrecip$Calgary), 
+                                              Vancouver = c(CanadianWeatherMonthlyPrecip$Vancouver), 
+                                              Victoria = c(CanadianWeatherMonthlyPrecip$Victoria))
+
+#Criando um gráfico de linha das temperaturas médias mensais
+GraficoPrecipitação <- ggplot(CanadianWeatherMonthlyPrecipSelected, aes(Month, Montreal)) +
+                              geom_line(aes(col = "Montreal"))+
+                              geom_line(aes(y = Toronto, col = "Toronto"))+
+                              geom_line(aes(y = London, col = "London"))+
+                              geom_line(aes(y = Winnipeg, col = "Winnipeg"))+
+                              geom_line(aes(y = Churchill, col = "Churchill"))+
+                              geom_line(aes(y = Regina, col = "Regina"))+
+                              geom_line(aes(y = Calgary, col = "Calgary"))+
+                              geom_line(aes(y = Vancouver, col = "Vancouver"))+
+                              geom_line(aes(y = Victoria, col = "Victoria"))+
+                              labs(title = "Gráfico da Precipitação Média Mensal x Meses",
+                                   x = "Meses",
+                                   y = "Precipitação",
+                                   color = "Estações")+
+                              theme_classic()
+```
+
+
+```{r}
+#Apresentação dos gráficos criados
+GraficoTemperatura
+GraficoPrecipitação
+```
+
+
+
+<p> 5) Você consegue visualizar alguma relação entre a temperatura e a precipitação?<p>
+<p> Aparentemente, no verão canadense é onde se encontra o maior período de precipitação meteorológica durante o ano.<p>
